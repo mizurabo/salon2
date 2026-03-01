@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1人サロン経営タイプ診断 | なぜ週6日働いても月商60万円を越えられないのか</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F9F6F2;
+    --terra: #C4724A;
+    --terra-light: #D9906E;
+    --terra-dark: #A85C38;
+    --charcoal: #2D2D2D;
+    --mid: #6B6460;
+    --line: #E2DDD8;
+    --card: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(196,114,74,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(196,114,74,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    text-align: center;
+    padding: 40px 20px 32px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--terra);
+    border: 1px solid var(--terra);
+    padding: 5px 16px;
+    margin-bottom: 20px;
+  }
+
+  .main-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(18px, 4.5vw, 26px);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--charcoal);
+    margin-bottom: 16px;
+  }
+
+  .main-title em {
+    font-style: normal;
+    color: var(--terra);
+  }
+
+  .sub-copy {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .time-badge {
+    font-size: 12px;
+    color: var(--mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .time-badge::before, .time-badge::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-wrap {
+    padding: 0 0 28px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    padding-top: 12px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--mid);
+  }
+
+  .progress-bar-outer {
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(to right, var(--terra-dark), var(--terra-light));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .q-card {
+    background: var(--card);
+    border-radius: 2px;
+    padding: 32px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 20px rgba(45,45,45,0.06);
+    border-top: 3px solid var(--terra);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--terra);
+    font-family: 'Noto Serif JP', serif;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(15px, 4vw, 18px);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--charcoal);
+    margin-bottom: 24px;
+  }
+
+  /* ===== CHOICES ===== */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    display: block;
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 16px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--charcoal);
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 56px;
+  }
+
+  .choice-btn:active {
+    transform: scale(0.99);
+  }
+
+  .choice-btn:hover {
+    border-color: var(--terra);
+    background: #FDF7F4;
+  }
+
+  .choice-btn.selected {
+    border-color: var(--terra);
+    background: #FDF7F4;
+    color: var(--terra-dark);
+  }
+
+  .choice-label {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: var(--terra);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    float: left;
+    margin-top: 1px;
+  }
+
+  /* ===== BACK BUTTON ===== */
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--mid);
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-bottom: 8px;
+  }
+
+  .back-btn:hover { color: var(--charcoal); }
+
+  /* ===== START SCREEN ===== */
+  #start-screen {
+    padding-bottom: 60px;
+  }
+
+  .profile-card {
+    background: var(--card);
+    border-radius: 2px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 20px rgba(45,45,45,0.06);
+    border-left: 3px solid var(--terra);
+  }
+
+  .profile-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--terra);
+    margin-bottom: 12px;
+    font-family: 'Noto Serif JP', serif;
+  }
+
+  .profile-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .stat-item {
+    background: var(--bg);
+    padding: 12px;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .stat-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--terra);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--mid);
+    margin-top: 2px;
+    display: block;
+  }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    background: var(--terra);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 20px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+    box-shadow: 0 4px 20px rgba(196,114,74,0.3);
+  }
+
+  .start-btn:hover { background: var(--terra-dark); }
+
+  /* ===== RESULT ===== */
+  #result-screen {
+    display: none;
+    padding-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards;
+  }
+
+  .result-header {
+    text-align: center;
+    padding: 32px 20px 28px;
+  }
+
+  .result-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--terra);
+    font-family: 'Noto Serif JP', serif;
+    margin-bottom: 10px;
+  }
+
+  .result-type {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+  }
+
+  .result-subtitle {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  .result-section {
+    background: var(--card);
+    border-radius: 2px;
+    padding: 24px 28px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 20px rgba(45,45,45,0.06);
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--terra);
+    font-family: 'Noto Serif JP', serif;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--charcoal);
+  }
+
+  .section-body {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #4A4542;
+  }
+
+  .warning-box {
+    background: #FDF3EE;
+    border-left: 3px solid var(--terra);
+    padding: 16px 18px;
+    border-radius: 0 2px 2px 0;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #4A4542;
+  }
+
+  .mizuho-box {
+    background: var(--charcoal);
+    color: #E8E4E0;
+    border-radius: 2px;
+    padding: 24px 28px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mizuho-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(to right, var(--terra-dark), var(--terra-light));
+  }
+
+  .mizuho-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--terra-light);
+    margin-bottom: 12px;
+    font-family: 'Noto Serif JP', serif;
+  }
+
+  .mizuho-text {
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--card);
+    border-radius: 2px;
+    padding: 32px 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 20px rgba(45,45,45,0.06);
+    text-align: center;
+    border-top: 3px solid var(--terra);
+  }
+
+  .cta-copy {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 20px;
+    color: var(--charcoal);
+  }
+
+  .cta-sub {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .cta-btn {
+    display: block;
+    width: 100%;
+    background: var(--terra);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 20px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+    box-shadow: 0 4px 20px rgba(196,114,74,0.3);
+    margin-bottom: 10px;
+  }
+
+  .cta-btn:hover { background: var(--terra-dark); }
+
+  /* Share */
+  .share-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .share-btn {
+    flex: 1;
+    padding: 14px 10px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--charcoal);
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+
+  .share-btn:hover { border-color: var(--terra); }
+
+  /* divider */
+  .ornament {
+    text-align: center;
+    color: var(--terra);
+    font-size: 18px;
+    letter-spacing: 8px;
+    margin: 20px 0;
+    opacity: 0.4;
+  }
+
+  /* hidden */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="site-header container">
+    <div class="badge">1人サロン経営タイプ診断</div>
+    <h1 class="main-title">
+      なぜあなたのサロンは<br>
+      <em>週6日働いても</em><br>
+      月商60万円の壁を<br>越えられないのか？
+    </h1>
+    <p class="sub-copy">
+      8つの質問に答えるだけで、あなたの経営の<br>
+      「本当の問題」がわかります。
+    </p>
+    <div class="time-badge">所要時間：約1分</div>
+  </div>
+
+  <div class="container">
+    <div class="profile-card">
+      <div class="profile-label">監修者プロフィール</div>
+      <div class="profile-name">みずほ</div>
+      <p style="font-size:13px; color:var(--mid); line-height:1.8;">
+        1人サロン経営歴10年。広告費ゼロで月商80万円・週4日稼働を実現。指導した新人セラピストが指名率1位を達成。現在はサロンオーナーへのコンサルティングを提供。
+      </p>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span class="stat-num">80万</span>
+          <span class="stat-label">月商（円）</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">70%</span>
+          <span class="stat-label">リピート率</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">週4日</span>
+          <span class="stat-label">稼働日数</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">¥0</span>
+          <span class="stat-label">広告費</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen" class="hidden">
+  <div class="container">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="q-counter">Q1 / 8</span>
+        <span id="q-pct">0%</span>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <button class="back-btn" id="back-btn" onclick="goBack()" style="display:none">
+      ← 前の質問へ
+    </button>
+
+    <div class="q-card" id="q-card">
+      <div class="q-number" id="q-num">QUESTION 01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="choices" id="choices"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen">
+  <div class="result-header container">
+    <div class="result-badge">診断結果</div>
+    <div class="result-type" id="r-type"></div>
+    <div class="result-subtitle" id="r-subtitle"></div>
+  </div>
+
+  <div class="container">
+    <div class="result-section">
+      <div class="section-label">現在の状態</div>
+      <div class="section-body" id="r-feature"></div>
+    </div>
+
+    <div class="ornament">＊ ＊ ＊</div>
+
+    <div class="result-section">
+      <div class="section-label">このままだと起きること</div>
+      <div class="warning-box" id="r-risk"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">今、必要なこと</div>
+      <div class="section-body" id="r-need"></div>
+    </div>
+
+    <div class="mizuho-box">
+      <div class="mizuho-label">みずほ からひとこと</div>
+      <div class="mizuho-text" id="r-mizuho"></div>
+    </div>
+
+    <div class="cta-section">
+      <p class="cta-copy">
+        あなたの問題は「努力不足」でも<br>「才能のなさ」でもありません。<br><strong>設計の問題です。</strong>
+      </p>
+      <p class="cta-sub">
+        10年間、広告費ゼロで月新規10名・リピート率70%・月商80万円を実現した私が、あなたのサロンの現状を一緒に整理します。
+      </p>
+      <a href="#" class="cta-btn" id="cta-link">まずは無料で話を聞いてみる</a>
+
+      <div class="share-row">
+        <a class="share-btn" id="line-share" href="#" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#06C755"><path d="M12 2C6.48 2 2 6.05 2 11.07c0 2.72 1.29 5.16 3.33 6.83L4.5 22l4.36-2.27c1 .28 2.07.42 3.14.42 5.52 0 10-4.05 10-9.07C22 6.05 17.52 2 12 2z"/></svg>
+          LINEでシェア
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "新規のお客様はどこから来ることが多いですか？",
+    choices: [
+      { label: "A", text: "ホットペッパーやクーポンサイトからの予約が多い", score: 1 },
+      { label: "B", text: "既存のお客様からの紹介がほとんど", score: 3 },
+      { label: "C", text: "SNSや口コミを見て来てくれる人が多い", score: 2 },
+      { label: "D", text: "正直、どこから来るかよくわからない", score: 0 }
+    ]
+  },
+  {
+    text: "料金を決めるとき、何を基準にしましたか？",
+    choices: [
+      { label: "A", text: "近隣の競合サロンの料金を参考にした", score: 1 },
+      { label: "B", text: "自分の技術と時間に見合う金額を計算して決めた", score: 3 },
+      { label: "C", text: "お客様に高いと思われないよう、少し低めに設定した", score: 0 },
+      { label: "D", text: "開業時に決めてから、ほぼ変えていない", score: 1 }
+    ]
+  },
+  {
+    text: "リピートしないお客様への対応はどうしていますか？",
+    choices: [
+      { label: "A", text: "特に何もしていない。縁がなかったと思っている", score: 0 },
+      { label: "B", text: "LINEやDMでフォローの連絡を入れることがある", score: 2 },
+      { label: "C", text: "なぜリピートしなかったか考えるが、対策までできていない", score: 1 },
+      { label: "D", text: "次回予約をその場で取ることを意識している", score: 3 }
+    ]
+  },
+  {
+    text: "今の稼働状況について、正直に選んでください。",
+    choices: [
+      { label: "A", text: "週6日以上働いており、休みが取れていない", score: 0 },
+      { label: "B", text: "週4〜5日で回せているが、それ以上増やしたくない", score: 3 },
+      { label: "C", text: "空き枠が多く、もっと予約を埋めたい", score: 1 },
+      { label: "D", text: "満席に近いが、売上が思ったほど伸びていない", score: 2 }
+    ]
+  },
+  {
+    text: "施術以外の「経営」の時間をどのくらい取れていますか？",
+    choices: [
+      { label: "A", text: "ほぼ取れていない。施術が終わったら疲れて何もできない", score: 0 },
+      { label: "B", text: "週に数時間はSNS発信や経営のことを考えている", score: 2 },
+      { label: "C", text: "時間は作れているが、何をすべきかわからず手が止まる", score: 1 },
+      { label: "D", text: "集客や料金、メニューを定期的に見直す仕組みがある", score: 3 }
+    ]
+  },
+  {
+    text: "お客様から「料金を下げてほしい」と言われたとき、どう対応していますか？",
+    choices: [
+      { label: "A", text: "断れずにサービスしてしまうことがある", score: 0 },
+      { label: "B", text: "きっぱり断れる。料金には自信を持っている", score: 3 },
+      { label: "C", text: "常連さんには特別価格を設けている", score: 1 },
+      { label: "D", text: "そもそもそういうお客様が来やすい集客をしている気がする", score: 1 }
+    ]
+  },
+  {
+    text: "半年後の売上目標は立てていますか？",
+    choices: [
+      { label: "A", text: "目標はあるが、達成するための具体的な手順が見えていない", score: 1 },
+      { label: "B", text: "目標を立てて、毎月進捗を確認している", score: 3 },
+      { label: "C", text: "目標を立てたことがない。なんとなく今月も頑張ろうと思っている", score: 0 },
+      { label: "D", text: "目標よりも「今月の予約を埋めること」で精一杯", score: 0 }
+    ]
+  },
+  {
+    text: "コンサルや学びに対して、どう感じていますか？",
+    choices: [
+      { label: "A", text: "受けたいが、費用対効果が見えないので踏み出せていない", score: 1 },
+      { label: "B", text: "すでに何かしら学んだが、売上に直結しなかった経験がある", score: 1 },
+      { label: "C", text: "自分の問題点がどこにあるかわからないから、何を学べばいいかもわからない", score: 0 },
+      { label: "D", text: "経営のことを一人で抱えすぎていて、誰かに相談したい", score: 2 }
+    ]
+  }
+];
+
+const types = {
+  A: {
+    name: "頑張り屋の消耗型",
+    subtitle: "── 体力で補っているうちは、限界が天井になる ──",
+    feature: "休みを削って稼働時間を増やすことで売上を作っています。今は体力でカバーできていますが、これ以上増やせる余白がありません。問題は「時間の使い方」ではなく、1人あたりの顧客単価と仕組みの設計にあります。",
+    risk: "身体の疲労が蓄積し、サービス品質が落ちる→リピート率が下がる→さらに新規を増やそうとする、という悪循環に入ります。",
+    need: "施術時間を増やさずに売上を上げる「単価設計」と「リピート構造」の構築です。",
+    mizuho: "私も10年前、同じ状態でした。変わったのは「頑張り方」を変えたからではなく、「設計」を変えたからです。"
+  },
+  B: {
+    name: "価格迷子の値下げ型",
+    subtitle: "── 安くしても埋まらない。その理由に気づいていますか？ ──",
+    feature: "競合を意識するあまり、価格で選ばれようとしています。しかし値下げは「選ばれる理由」にはなりません。価格を下げるほど、値段でしか判断しないお客様が集まる構造になっています。",
+    risk: "利益率が下がり、同じ施術数でも手元に残るお金が減っていきます。疲弊しているのに豊かさを感じられない状態です。",
+    need: "「なぜあなたでなければならないか」を言語化するポジショニングと価格の再設計です。",
+    mizuho: "広告費ゼロで月商80万円を実現できたのは、料金を上げたからではなく「選ばれる設計」を整えたからです。"
+  },
+  C: {
+    name: "方向音痴の模索型",
+    subtitle: "── 問題はわかっている。でも何から手をつければいいかわからない ──",
+    feature: "問題意識は高く、情報収集もしています。しかし情報が多すぎて優先順位がつけられず、結果として何も変わらない状態が続いています。学ぶことで安心しているループに入っているかもしれません。",
+    risk: "時間とお金をインプットに使い続け、売上の実態は変わらないまま「もう少し経てば変わるはず」と先送りし続けます。",
+    need: "あなたのサロンの現状を客観的に診て、何を・どの順番で・いつまでにやるかを明確にする外部の視点です。",
+    mizuho: "1人でやっていると、自分の課題が見えにくくなります。私が新人に指導したとき、指名率1位になれたのは「正しい順番」で動いたからです。"
+  },
+  D: {
+    name: "構造欠如の頭打ち型",
+    subtitle: "── 予約は埋まっている。なのに豊かさを感じられない ──",
+    feature: "技術力もリピーターもある。でも売上が一定ラインから伸びない。これは努力の問題ではなく、経営の「構造」自体に穴があるサインです。リピート率・単価・稼働日数のバランスが崩れたまま固定化しています。",
+    risk: "このままの構造で5年経っても、売上の天井は変わりません。むしろ年齢や体力の変化とともに、じわじわと経営が苦しくなっていきます。",
+    need: "現状の数字を整理し、どこに「レバレッジポイント」があるかを特定する経営構造の見直しです。",
+    mizuho: "私自身、多店舗展開で失敗した経験があります。「拡大」ではなく「最適化」で月商80万円・週4日を実現した方法を、あなたのサロンに合わせてお伝えできます。"
+  }
+};
+
+let currentQ = 0;
+let answers = [];
+const TOTAL = 8;
+
+function startQuiz() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[currentQ];
+  const numStr = String(currentQ + 1).padStart(2, '0');
+
+  document.getElementById('q-num').textContent = `QUESTION ${numStr}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-counter').textContent = `Q${currentQ + 1} / ${TOTAL}`;
+  document.getElementById('q-pct').textContent = `${Math.round((currentQ / TOTAL) * 100)}%`;
+  document.getElementById('progress-bar').style.width = `${(currentQ / TOTAL) * 100}%`;
+
+  document.getElementById('back-btn').style.display = currentQ > 0 ? 'flex' : 'none';
+
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-label">${c.label}</span>${c.text}`;
+    btn.onclick = () => selectAnswer(i, c.score);
+    choicesEl.appendChild(btn);
+  });
+
+  // Re-trigger animation
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeUp 0.4s forwards';
+}
+
+function selectAnswer(idx, score) {
+  answers[currentQ] = score;
+
+  const btns = document.querySelectorAll('.choice-btn');
+  btns[idx].classList.add('selected');
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < TOTAL) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }, 300);
+}
+
+function goBack() {
+  if (currentQ > 0) {
+    currentQ--;
+    answers.pop();
+    showQuestion();
+  }
+}
+
+function showResult() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  let typeKey;
+  if (total <= 6) typeKey = 'A';
+  else if (total <= 12) typeKey = 'B';
+  else if (total <= 17) typeKey = 'C';
+  else typeKey = 'D';
+
+  const t = types[typeKey];
+
+  document.getElementById('quiz-screen').classList.add('hidden');
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'block';
+
+  document.getElementById('r-type').textContent = t.name;
+  document.getElementById('r-subtitle').textContent = t.subtitle;
+  document.getElementById('r-feature').textContent = t.feature;
+  document.getElementById('r-risk').textContent = t.risk;
+  document.getElementById('r-need').textContent = t.need;
+  document.getElementById('r-mizuho').textContent = t.mizuho;
+
+  // Share links
+  const url = encodeURIComponent(location.href);
+  document.getElementById('line-share').href = `https://social-plugins.line.me/lineit/share?url=${url}`;
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  rs.style.opacity = '0';
+  setTimeout(() => { rs.style.animation = 'fadeUp 0.6s forwards'; }, 50);
+}
+</script>
+</body>
+</html>
