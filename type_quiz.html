@@ -129,20 +129,11 @@ function showResult(typeId) {
         <span class="action-pill" style="background:${t.color}">${t.action}</span>
       </div>
       <div class="redirect-box">
-        <p>より詳しく自分の状態を確認したい方へ<br>8問の詳細診断でさらに具体的な原因がわかります</p><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div><div class="countdown" id="countdown">5</div>
+        <p>より詳しく自分の状態を確認したい方へ<br>8問の詳細診断でさらに具体的な原因がわかります</p>
         <button class="redirect-btn" onclick="goToDetail()">今すぐ詳細診断を受ける</button>
       </div>
       <button class="retry-btn" onclick="restart()">もう一度診断する</button>
     </div>`;
-
-  let sec = 5;
-  countdownTimer = setInterval(function(){
-    sec--;
-    const el = document.getElementById('countdown');
-    if(el) el.textContent = sec;
-    if(sec <= 0){
-      clearInterval(countdownTimer);
-      goToDetail();
     }
   }, 1000);
 }
