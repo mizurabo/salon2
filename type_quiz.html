@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -33,12 +34,14 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #FAFAF8; color: #2D2
 .symptom-list { list-style: none; margin-bottom: 14px; }
 .symptom-list li { font-size: 13px; padding: 3px 0 3px 16px; position: relative; line-height: 1.6; }
 .symptom-list li::before { content: "—"; position: absolute; left: 0; opacity: 0.4; }
-.action-pill { display: inline-block; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 6px; color: white; }
-.redirect-box { background: #2D2D2D; border-radius: 12px; padding: 1.25rem; text-align: center; margin-bottom: 0.75rem; }
-.redirect-box p { color: #F9F6F2; font-size: 13px; line-height: 1.7; margin-bottom: 0.75rem; }
-.countdown { font-size: 22px; font-weight: 700; color: white; margin-bottom: 0.5rem; }
-.redirect-btn { display: inline-block; background: white; color: #2D2D2D; font-size: 14px; font-weight: 500; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; border: none; }
-.retry-btn { width: 100%; background: #F1EFE8; border: 0.5px solid #D3D1C7; border-radius: 8px; padding: 0.75rem; font-size: 13px; color: #5F5E5A; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+.action-pill { display: inline-block; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 6px; color: white; margin-bottom: 0; }
+.next-box { background: #2D2D2D; border-radius: 12px; padding: 1.25rem; text-align: center; margin-bottom: 0.75rem; }
+.next-box p { color: #F9F6F2; font-size: 13px; line-height: 1.7; margin-bottom: 0.75rem; }
+.next-btn { display: inline-block; background: white; color: #2D2D2D; font-size: 14px; font-weight: 500; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; border: none; width: 100%; }
+.next-btn:hover { background: #F1EFE8; }
+.retry-btn { width: 100%; background: #F1EFE8; border: 0.5px solid #D3D1C7; border-radius: 8px; padding: 0.75rem; font-size: 13px; color: #5F5E5A; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 0.75rem; }
+.skip-link { display: block; text-align: center; font-size: 12px; color: #B4B2A9; cursor: pointer; background: none; border: none; font-family: 'Noto Sans JP', sans-serif; padding: 0.5rem; }
+.skip-link:hover { color: #888780; }
 .footer { text-align: center; font-size: 11px; color: #B4B2A9; margin-top: 2rem; }
 .fade-in { animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -64,21 +67,44 @@ const QUESTIONS = [
   { id:'q5', text:'売上が一定のラインから伸びない状態が続いていますか？', yes:'typeD', no:'q6' },
   { id:'q6', text:'何から手をつければいいかわからず、行動が先送りになることがありますか？', yes:'typeC', no:'retry' }
 ];
+
 const TYPES = {
-  typeA: { label:'タイプA', name:'頑張り屋の消耗型', sub:'体力で補っているうちは、限界が天井になる', color:'#D85A30', bg:'#FAECE7', tc:'#993C1D', symptoms:['週6日以上稼働している','休むと罪悪感がある','売上が変わらないのに疲れが増している','新規を増やすことしか解決策が思い浮かばない'], action:'単価設計とリピート構造の構築' },
-  typeB: { label:'タイプB', name:'価格迷子の値下げ型', sub:'安くしても埋まらない。その理由に気づいていますか？', color:'#BA7517', bg:'#FAEEDA', tc:'#854F0B', symptoms:['競合より安く設定している','値上げが怖くて踏み出せない','クーポン・割引で集客している','手元にお金が残らない'], action:'ポジショニングと価格の再設計' },
-  typeC: { label:'タイプC', name:'方向音痴の模索型', sub:'問題はわかっている。でも何から手をつければいいかわからない', color:'#378ADD', bg:'#E6F1FB', tc:'#185FA5', symptoms:['インプットしても結果が出ない','何を優先すべきかわからない','SNSを頑張っているが成果が見えない','先送りが続いている'], action:'何を・どの順番でやるかを明確にする' },
-  typeD: { label:'タイプD', name:'構造欠如の頭打ち型', sub:'予約は埋まっている。なのに豊かさを感じられない', color:'#1D9E75', bg:'#E1F5EE', tc:'#0F6E56', symptoms:['満席なのに売上が伸びない','これ以上何をすればいいかわからない','施術以外の経営に時間が割けない','このまま5年続けた未来が想像できない'], action:'レバレッジポイントを特定する経営構造の見直し' }
+  typeA: {
+    label:'タイプA', name:'頑張り屋の消耗型',
+    sub:'体力で補っているうちは、限界が天井になる',
+    color:'#D85A30', bg:'#FAECE7', tc:'#993C1D',
+    symptoms:['週6日以上稼働している','休むと罪悪感がある','売上が変わらないのに疲れが増している','新規を増やすことしか解決策が思い浮かばない'],
+    action:'単価設計とリピート構造の構築'
+  },
+  typeB: {
+    label:'タイプB', name:'価格迷子の値下げ型',
+    sub:'安くしても埋まらない。その理由に気づいていますか？',
+    color:'#BA7517', bg:'#FAEEDA', tc:'#854F0B',
+    symptoms:['競合より安く設定している','値上げが怖くて踏み出せない','クーポン・割引で集客している','手元にお金が残らない'],
+    action:'ポジショニングと価格の再設計'
+  },
+  typeC: {
+    label:'タイプC', name:'方向音痴の模索型',
+    sub:'問題はわかっている。でも何から手をつければいいかわからない',
+    color:'#378ADD', bg:'#E6F1FB', tc:'#185FA5',
+    symptoms:['インプットしても結果が出ない','何を優先すべきかわからない','SNSを頑張っているが成果が見えない','先送りが続いている'],
+    action:'何を・どの順番でやるかを明確にする'
+  },
+  typeD: {
+    label:'タイプD', name:'構造欠如の頭打ち型',
+    sub:'予約は埋まっている。なのに豊かさを感じられない',
+    color:'#1D9E75', bg:'#E1F5EE', tc:'#0F6E56',
+    symptoms:['満席なのに売上が伸びない','これ以上何をすればいいかわからない','施術以外の経営に時間が割けない','このまま5年続けた未来が想像できない'],
+    action:'レバレッジポイントを特定する経営構造の見直し'
+  }
 };
 
 const DETAIL_URL = 'https://mizurabo.github.io/salon2';
 let history = [];
-let countdownTimer = null;
 
 function getQIndex(id) { return ['q1','q2','q3','q4','q5','q6'].indexOf(id)+1; }
 
 function showQ(id) {
-  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer=null; }
   if(id==='retry'){ showRetry(); return; }
   if(TYPES[id]){ showResult(id); return; }
   const q = QUESTIONS.find(q=>q.id===id);
@@ -128,19 +154,32 @@ function showResult(typeId) {
         <p class="section-label" style="color:${t.tc}">最初にやること</p>
         <span class="action-pill" style="background:${t.color}">${t.action}</span>
       </div>
-      <div class="redirect-box">
-        <p>より詳しく自分の状態を確認したい方へ<br>8問の詳細診断でさらに具体的な原因がわかります</p>
-        <button class="redirect-btn" onclick="goToDetail()">今すぐ詳細診断を受ける</button>
+      <div class="next-box">
+        <p>より詳しく自分の状態を確認したい方へ。<br>8問の詳細診断で<br>さらに具体的な原因がわかります。</p>
+        <button class="next-btn" onclick="goToDetail()">詳細診断を受ける（無料）</button>
       </div>
       <button class="retry-btn" onclick="restart()">もう一度診断する</button>
+      <button class="skip-link" onclick="skipDetail()">今は詳細診断をしない</button>
     </div>`;
-    }
-  }, 1000);
 }
 
 function goToDetail() {
-  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer=null; }
   window.location.href = DETAIL_URL;
+}
+
+function skipDetail() {
+  document.getElementById('quizArea').innerHTML = `
+    <div class="fade-in">
+      <div class="question-box">
+        <p class="question-text" style="color:#888780;font-size:14px;">
+          診断お疲れ様でした。<br><br>
+          気になることがあれば<br>
+          いつでもLINEで相談してください。
+        </p>
+      </div>
+      <a href="https://lin.ee/5veCFhV" style="display:block;background:#2D2D2D;color:white;text-align:center;padding:0.85rem;border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;font-family:'Noto Sans JP',sans-serif;margin-bottom:0.75rem;">LINEで相談してみる</a>
+      <button class="retry-btn" onclick="restart()">もう一度診断する</button>
+    </div>`;
 }
 
 function showRetry() {
@@ -152,7 +191,6 @@ function showRetry() {
 }
 
 function restart() {
-  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer=null; }
   history=[];
   showQ('q1');
 }
